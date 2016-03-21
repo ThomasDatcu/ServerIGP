@@ -162,12 +162,10 @@ public class SocketCommunication extends Thread {
                             System.out.println("There is no argument with the LIST command");
                             String toSend = "";
                             toSend += "+OK " + msgInMailDrop + " message(s) ( " + mailDropLength + "octects)";
-                            //this.writeBytes("+OK " + msgInMailDrop + " message(s) ( " + mailDropLength + "octects)" );
                             this.flush();
                             for(int i = 0; i<msgInMailDrop;i++){
                                 int msgLength = this.mailUser.getMessageLength(i);
                                 toSend += "+OK " + i + " " + msgLength;
-                                //this.writeBytes("+OK " + i + " " + msgLength);
                             }
                             this.writeBytes(toSend);
                         }else{
@@ -280,7 +278,8 @@ public class SocketCommunication extends Thread {
 
     private int writeBytes(String s){
         try {
-            System.out.println(s);
+            s += "\r\n";
+            System.out.println("Message sent to the client : " + s);
             outputToClient.write(s.getBytes());
             //System.out.println(s.getBytes());
             //outputToClient.writeBytes(s);
@@ -293,8 +292,10 @@ public class SocketCommunication extends Thread {
 
     public int flush(){
         try {
-            String s ="\r\n";
-            outputToClient.write(s.getBytes());
+            System.out.println("Flushing outputToClient flux flush : " + outputToClient.toString());
+
+            //String s ="\r\n";
+            //outputToClient.write(s.getBytes());
             outputToClient.flush();
             return 0;
         } catch (IOException e) {
