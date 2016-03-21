@@ -15,7 +15,7 @@ public class Server {
 	public Server(){
 		try {
 			this.allUsers = new UserList();
-			this.socket = new ServerSocket(110);
+			this.socket = new ServerSocket(2048);
 			System.out.println("Server Starting");
 			
 		} catch (IOException e) {
