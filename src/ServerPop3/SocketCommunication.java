@@ -202,8 +202,8 @@ public class SocketCommunication extends Thread {
                                 this.writeBytes("-ERR no such message");
                                 this.flush();
                             }else{
-                                this.writeBytes("+OK sending message " + msgNumber);
-                                this.writeBytes(messageTxt);
+                                this.writeBytes("+OK sending message " + msgNumber + messageTxt);
+                                //this.writeBytes(messageTxt);
                                 this.flush();
                             }
                         }else{
@@ -245,7 +245,7 @@ public class SocketCommunication extends Thread {
                         this.flush();
                     }else if(splitTextFromClient[0].compareTo("QUIT") == 0){            
                         this.mailUser.disconnect();
-                        state = 3;
+                        this.state = 3;
                     }else{
                         this.writeBytes("-ERR unknown inbound action");
                         this.flush();
@@ -265,6 +265,7 @@ public class SocketCommunication extends Thread {
 
     private void close() {
         try {
+            System.out.println("Closing all communication and shutting down the socket");
             outputToClient.close();
             inputFromClient.close();
             s.close();
