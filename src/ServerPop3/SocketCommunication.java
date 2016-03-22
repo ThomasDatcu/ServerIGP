@@ -19,9 +19,6 @@ public class SocketCommunication extends Thread {
      * 3: Update
      */
     int state;
-    int idClient;
-    String nameClient;
-    Message MailBox[];
     int msgInMailDrop;
     int mailDropLength;
     Socket s;
@@ -31,10 +28,10 @@ public class SocketCommunication extends Thread {
     User mailUser;	
 
 
-    public SocketCommunication(Socket s, UserList allUsers){
+    public SocketCommunication(Socket s){
         try {
+            this.allUsers = new UserList();
             System.out.println("Creating Communication Socket");
-            this.allUsers = allUsers;
             this.state = 0;
             this.s = s;
             this.inputFromClient = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -85,9 +82,6 @@ public class SocketCommunication extends Thread {
                             this.mailUser = allUsers.connect(splitTextFromClient[1], splitTextFromClient[2]);
                             if (this.mailUser != null) {
 
-                        /*if(splitTextFromClient[1].equals("tata") && splitTextFromClient[2].equals("toto")){						
-                            this.writeBytes("+OK maildrop has 2 messages");
-                            this.flush();*/
                                 System.out.println("An user matching the username and the "
                                         + "password sent by the client has been found");
                                 this.state = 2;
@@ -169,11 +163,11 @@ public class SocketCommunication extends Thread {
                         if(splitTextFromClient.length == 1){
                             System.out.println("There is no argument with the LIST command");
                             String toSend = "";
-                            toSend += "+OK " + msgInMailDrop + " message(s) ( " + mailDropLength + "octects)";
+                            toSend += "+OK " + msgInMailDrop + " message(s) ( " + mailDropLength + "octects) \r\n";
                             this.flush();
-                            for(int i = 0; i<msgInMailDrop;i++){
+                            for(int i = 1; i<=msgInMailDrop;i++){
                                 int msgLength = this.mailUser.getMessageLength(i);
-                                toSend += "+OK " + i + " " + msgLength;
+                                toSend += "+OK " + i + " " + msgLength + "\r\n";
                             }
                             this.writeBytes(toSend);
                         }else{
@@ -210,8 +204,7 @@ public class SocketCommunication extends Thread {
                                 this.writeBytes("-ERR no such message");
                                 this.flush();
                             }else{
-                                this.writeBytes("+OK sending message " + msgNumber + messageTxt);
-                                //this.writeBytes(messageTxt);
+                                this.writeBytes("+OK " + this.mailUser.getMessageLength(msgNumber) + " octets \r\n" + messageTxt);
                                 this.flush();
                             }
                         }else{
@@ -277,7 +270,6 @@ public class SocketCommunication extends Thread {
             outputToClient.close();
             inputFromClient.close();
             s.close();
-            //this.close(); -> WTF qu'est ce que tu as fais ici ?
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -290,8 +282,6 @@ public class SocketCommunication extends Thread {
             s += "\r\n";
             System.out.println("Message sent to the client : " + s);
             outputToClient.write(s.getBytes());
-            //System.out.println(s.getBytes());
-            //outputToClient.writeBytes(s);
                 return 0;
         } catch (IOException e) {
             e.printStackTrace();
@@ -301,10 +291,6 @@ public class SocketCommunication extends Thread {
 
     public int flush(){
         try {
-            System.out.println("Flushing outputToClient flux flush : " + outputToClient.toString());
-
-            //String s ="\r\n";
-            //outputToClient.write(s.getBytes());
             outputToClient.flush();
             return 0;
         } catch (IOException e) {

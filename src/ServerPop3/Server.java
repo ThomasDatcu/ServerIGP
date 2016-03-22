@@ -10,11 +10,9 @@ import java.util.logging.Logger;
 	
 public class Server {
 	ServerSocket socket;
-	UserList allUsers;
-	
+
 	public Server(){
 		try {
-			this.allUsers = new UserList();
 			this.socket = new ServerSocket(2048);
 			System.out.println("Server Starting");
 			
@@ -45,7 +43,7 @@ public class Server {
 
 
 	private void initCommunication(Socket s){
-            SocketCommunication socketCom = new SocketCommunication(s, this.allUsers);
+            SocketCommunication socketCom = new SocketCommunication(s);
             socketCom.start();
             System.out.println("Socket communication start");
 		
