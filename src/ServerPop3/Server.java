@@ -19,7 +19,7 @@ public class Server {
 			System.out.println("Server Starting");
 			
 		} catch (IOException e) {
-			System.out.println("Erreur impossible d'ouvrir le socket sur le port 110");
+			System.out.println("Erreur impossible d'ouvrir le socket sur le port 2048");
 			e.printStackTrace();
 		}
 	}
@@ -37,6 +37,7 @@ public class Server {
                     this.initCommunication(s);
                 } catch (IOException e) {
                     e.printStackTrace();
+					running = false;
                 }
             }
 	}

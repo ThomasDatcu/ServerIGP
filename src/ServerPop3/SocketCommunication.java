@@ -75,26 +75,34 @@ public class SocketCommunication extends Thread {
                     //soit reception  APOP soit reception USER
                     if(splitTextFromClient[0].compareTo("APOP") == 0){
                         System.out.println("Server received an APOP command");
-                        this.mailUser = allUsers.connect(splitTextFromClient[1], splitTextFromClient[2]);
-                        if(this.mailUser != null){
+                        if(splitTextFromClient.length != 3){
+                            System.out.println("Error uncorrect number of parameters");
+                            this.writeBytes("-ERR You sent an illegal APOP command");
+                            this.flush();
+                        }
+                        else {
+
+                            this.mailUser = allUsers.connect(splitTextFromClient[1], splitTextFromClient[2]);
+                            if (this.mailUser != null) {
 
                         /*if(splitTextFromClient[1].equals("tata") && splitTextFromClient[2].equals("toto")){						
                             this.writeBytes("+OK maildrop has 2 messages");
                             this.flush();*/
-                            System.out.println("An user matching the username and the "
-                                            + "password sent by the client has been found");
-                            this.state = 2;
-                            msgInMailDrop = this.mailUser.getNumberOfMessageInMaildrop();
-                            mailDropLength = this.mailUser.getLengthOfMailDrop();
-                            this.writeBytes("+OK " + mailUser.getName() + " maildrop has " + 
-                                            msgInMailDrop + " messages (" + mailDropLength + "octects)");
-                            this.flush();
-                            System.out.println("Sending login confirmation to the user and moving to transaction state");
-                        }else{
-                            this.writeBytes("-ERR invalid username or password");
-                            this.flush();
-                            System.out.println("Sending err message to the client "
-                                            + "because the input username/password is unknown");
+                                System.out.println("An user matching the username and the "
+                                        + "password sent by the client has been found");
+                                this.state = 2;
+                                msgInMailDrop = this.mailUser.getNumberOfMessageInMaildrop();
+                                mailDropLength = this.mailUser.getLengthOfMailDrop();
+                                this.writeBytes("+OK " + mailUser.getName() + " maildrop has " +
+                                        msgInMailDrop + " messages (" + mailDropLength + "octects)");
+                                this.flush();
+                                System.out.println("Sending login confirmation to the user and moving to transaction state");
+                            } else {
+                                this.writeBytes("-ERR invalid username or password");
+                                this.flush();
+                                System.out.println("Sending err message to the client "
+                                        + "because the input username/password is unknown");
+                            }
                         }
                     }else if(splitTextFromClient[0].compareTo("USER") == 0){
                         System.out.println("Server received an USER command");
