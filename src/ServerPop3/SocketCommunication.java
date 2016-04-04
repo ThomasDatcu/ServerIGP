@@ -1,5 +1,6 @@
 package ServerPop3;
 
+import javax.net.ssl.SSLSocket;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -21,14 +22,14 @@ public class SocketCommunication extends Thread {
     int state;
     int msgInMailDrop;
     int mailDropLength;
-    Socket s;
+    SSLSocket s;
     BufferedReader inputFromClient;
     DataOutputStream outputToClient;
     UserList allUsers;
     User mailUser;	
 
 
-    public SocketCommunication(Socket s){
+    public SocketCommunication(SSLSocket s){
         try {
             this.allUsers = new UserList();
             System.out.println("Creating Communication Socket");
