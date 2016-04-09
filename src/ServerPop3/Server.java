@@ -21,6 +21,19 @@ public class Server {
 		try {
 			socketFactory= (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			sslServerSocket = (SSLServerSocket) socketFactory.createServerSocket(2048);
+
+			String[] ciphers = this.sslServerSocket.getSupportedCipherSuites();
+
+			ArrayList<String> ciphersAnon = new ArrayList<String>();
+			for(String cipher : ciphers){
+				if(cipher.contains("anon")){
+					ciphersAnon.add(cipher);
+				}
+			}
+
+			String[] pickedCiphers = new String[ciphersAnon.size()];
+			pickedCiphers = ciphersAnon.toArray(pickedCiphers);
+			this.sslServerSocket.setEnabledCipherSuites(pickedCiphers);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		} ;
@@ -33,19 +46,11 @@ public class Server {
 		
             boolean running = true;
             while(running){
-                SSLSocket s = null;
+                Socket s = null;
                 try {
                     System.out.println("Server awaiting connection");
-                    s = (SSLSocket)sslServerSocket.accept();
-					String[] cipherSuite = s.getSupportedCipherSuites();
-					ArrayList<String> res = new ArrayList<>();
-					for(String s1 : cipherSuite){
-						if(s1.contains("anon")){
-							res.add(s1);
-						}
-					}
-					s.setEnabledCipherSuites((String[]) res.toArray());
-                    this.initCommunication(s);
+                    s = this.sslServerSocket.accept();
+					this.initCommunication(s);
                 } catch (IOException e) {
                     e.printStackTrace();
 					running = false;
@@ -55,7 +60,7 @@ public class Server {
 
 
 
-	private void initCommunication(SSLSocket s){
+	private void initCommunication(Socket s){
             SocketCommunication socketCom = new SocketCommunication(s);
             socketCom.start();
             System.out.println("Socket communication start");

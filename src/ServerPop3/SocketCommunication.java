@@ -22,14 +22,14 @@ public class SocketCommunication extends Thread {
     int state;
     int msgInMailDrop;
     int mailDropLength;
-    SSLSocket s;
+    Socket s;
     BufferedReader inputFromClient;
     DataOutputStream outputToClient;
     UserList allUsers;
     User mailUser;	
 
 
-    public SocketCommunication(SSLSocket s){
+    public SocketCommunication(Socket s){
         try {
             this.allUsers = new UserList();
             System.out.println("Creating Communication Socket");
