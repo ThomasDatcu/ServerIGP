@@ -12,18 +12,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-	
+/**
+ * Cette classe correspond au serveur principal.
+ * Les clients vont d'abord se connecter à ce SSLSocket ( à condition qu'il posséde les bons ciphers.
+ * Ensuite, un socketCommunication va être créer et via ce socket que se dérouleront les transactions.
+ * Ainsi on s'assure que plusieurs client peuvent se connecter en même temps au serveur
+  */
 public class Server {
 	SSLServerSocketFactory socketFactory;
 	SSLServerSocket sslServerSocket;
 
 	public Server(){
 		try {
+			// Initialisation du SSLServerSocket sur le port 110
 			socketFactory= (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-			sslServerSocket = (SSLServerSocket) socketFactory.createServerSocket(2048);
+			sslServerSocket = (SSLServerSocket) socketFactory.createServerSocket(110);
 
+			// On initialise la liste des ciphers autorisés sur la connection ( ici ceux contenant anon car on ne gére pas les certificats )
 			String[] ciphers = this.sslServerSocket.getSupportedCipherSuites();
-
 			ArrayList<String> ciphersAnon = new ArrayList<String>();
 			for(String cipher : ciphers){
 				if(cipher.contains("anon")){
@@ -31,6 +37,7 @@ public class Server {
 				}
 			}
 
+			// Une fois la liste initialisée, on autorise les ciphers de la liste a être utilisé sur le SSLServerSocket
 			String[] pickedCiphers = new String[ciphersAnon.size()];
 			pickedCiphers = ciphersAnon.toArray(pickedCiphers);
 			this.sslServerSocket.setEnabledCipherSuites(pickedCiphers);
@@ -39,11 +46,15 @@ public class Server {
 		} ;
 			System.out.println("Server Starting");
 	}
-	
-	
-	
+
+
+	/**
+	 * Méthode d'éxécution, tant que le server est en fonctionnement, on se met en attente d'un accept.
+	 * Une fois reçut on instancie un nouveau socketCommunication via la méthode initCommunication
+	 */
 	public void run(){
-		
+
+
             boolean running = true;
             while(running){
                 Socket s = null;
@@ -59,7 +70,10 @@ public class Server {
 	}
 
 
-
+	/**
+	 * On instancie un nouveau socketCommuncation qui correspond à un nouveau thread.
+	 * Ensuite, on lance l'éxécution de notre thread	 *
+     */
 	private void initCommunication(Socket s){
             SocketCommunication socketCom = new SocketCommunication(s);
             socketCom.start();
