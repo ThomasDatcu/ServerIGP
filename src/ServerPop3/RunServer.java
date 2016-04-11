@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 public class RunServer {
     public static void main(String[] args) throws IOException {
-        Server s = new Server();
+        ServerPop3 s = new ServerPop3();
         s.run();
     }
 

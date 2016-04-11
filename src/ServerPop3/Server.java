@@ -18,15 +18,17 @@ import java.util.logging.Logger;
  * Ensuite, un socketCommunication va être créer et via ce socket que se dérouleront les transactions.
  * Ainsi on s'assure que plusieurs client peuvent se connecter en même temps au serveur
   */
-public class Server {
+public class Server extends Thread {
 	SSLServerSocketFactory socketFactory;
 	SSLServerSocket sslServerSocket;
+	protected int port;
 
-	public Server(){
+	public Server(int port){
 		try {
+			this.port = port;
 			// Initialisation du SSLServerSocket sur le port 110
 			socketFactory= (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-			sslServerSocket = (SSLServerSocket) socketFactory.createServerSocket(110);
+			sslServerSocket = (SSLServerSocket) socketFactory.createServerSocket(this.port);
 
 			// On initialise la liste des ciphers autorisés sur la connection ( ici ceux contenant anon car on ne gére pas les certificats )
 			String[] ciphers = this.sslServerSocket.getSupportedCipherSuites();
