@@ -1,15 +1,10 @@
-package ServerPop3;
+package Server;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -18,7 +13,7 @@ import java.util.logging.Logger;
  * Ensuite, un socketCommunication va être créer et via ce socket que se dérouleront les transactions.
  * Ainsi on s'assure que plusieurs client peuvent se connecter en même temps au serveur
   */
-public class Server extends Thread {
+public abstract class Server extends Thread {
 	SSLServerSocketFactory socketFactory;
 	SSLServerSocket sslServerSocket;
 	protected int port;
@@ -72,15 +67,12 @@ public class Server extends Thread {
 	}
 
 
+
+
 	/**
 	 * On instancie un nouveau socketCommuncation qui correspond à un nouveau thread.
 	 * Ensuite, on lance l'éxécution de notre thread	 *
      */
-	private void initCommunication(Socket s){
-            SocketCommunication socketCom = new SocketCommunication(s);
-            socketCom.start();
-            System.out.println("Socket communication start");
-		
-	}
-	
+	protected abstract void initCommunication(Socket s);
+
 }

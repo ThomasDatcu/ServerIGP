@@ -1,4 +1,4 @@
-package ServerPop3;
+package Server;
 
 import java.io.IOException;
 
@@ -7,8 +7,10 @@ import java.io.IOException;
  */
 public class RunServer {
     public static void main(String[] args) throws IOException {
-        ServerPop3 s = new ServerPop3();
-        s.run();
+        ServerPop3 s1 = new ServerPop3();
+        s1.run();
+//        ServerSMTP s2 = new ServerSMTP();
+//        s2.run();;
     }
 
 }

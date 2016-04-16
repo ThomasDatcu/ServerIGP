@@ -5,7 +5,7 @@
  */
 package Tests;
 
-import ServerPop3.User;
+import Server.User;
 
 /**
  *

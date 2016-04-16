@@ -5,8 +5,8 @@
  */
 package Tests;
 
-import ServerPop3.User;
-import ServerPop3.UserList;
+import Server.User;
+import Server.UserList;
 
 /**
  *
