@@ -14,7 +14,7 @@ public class ServerPop3 extends Server {
     @Override
     protected void initCommunication(Socket s) {
         {
-            SocketCommunication socketCom = new SocketCommunication(s);
+            SocketCommunication socketCom = new SocketCommunicationPOP3(s);
             socketCom.start();
             System.out.println("Socket communication start");
 

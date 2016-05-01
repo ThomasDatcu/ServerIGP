@@ -12,6 +12,9 @@ public class ServerSMTP extends Server {
 
     @Override
     protected void initCommunication(Socket s) {
+        SocketCommunication socketCom = new SocketCommunicationSMTP(s);
+        socketCom.start();
+        System.out.println("Socket communication start");
 
     }
 }
