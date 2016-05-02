@@ -64,5 +64,12 @@ public class UserList {
         }
         return 0;
     }
+
+    public User getUser(String name){
+        for(User u : this.userList)
+            if(u.getName().equals("name"))
+                return u;
+        return null;
+    }
 	
 }
