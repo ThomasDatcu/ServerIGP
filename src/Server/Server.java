@@ -40,7 +40,7 @@ public abstract class Server extends Thread {
 			this.sslServerSocket.setEnabledCipherSuites(pickedCiphers);
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		} ;
+		}
 			System.out.println("Server Starting");
 	}
 
@@ -65,8 +65,6 @@ public abstract class Server extends Thread {
                 }
             }
 	}
-
-
 
 
 	/**

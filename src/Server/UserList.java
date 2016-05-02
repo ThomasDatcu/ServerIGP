@@ -56,5 +56,13 @@ public class UserList {
         }
         return null;
     }
+
+    public int sendMessage(String messageText, ArrayList<User> users){
+        for(User u : users){
+            Message m = new Message(u.getNumberOfMessageInMaildrop(), true, messageText);
+            u.addMessage(m);
+        }
+        return 0;
+    }
 	
 }

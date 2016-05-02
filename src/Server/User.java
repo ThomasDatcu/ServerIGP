@@ -157,5 +157,8 @@ public class User {
         }
         return 0;
     }
-	
+
+    public void addMessage(Message m) {
+        this.mails.add(m);
+    }
 }
