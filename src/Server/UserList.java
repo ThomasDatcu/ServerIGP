@@ -67,7 +67,7 @@ public class UserList {
 
     public User getUser(String name){
         for(User u : this.userList)
-            if(u.getName().equals("name"))
+            if(u.getName().compareTo("name") == 0)
                 return u;
         return null;
     }
