@@ -19,6 +19,7 @@ public class User {
     private String password;
     private ArrayList<Message> mails;
     private final int nbMessages;
+    private Boolean isConnected = false;
 
     public User(int id, String name, String password){
         this.id = id;
@@ -62,17 +63,23 @@ public class User {
     }
 
     public boolean connect(String password) {
-        return this.password.compareTo(password) == 0;
+        if(this.password.compareTo(password)==0){
+            isConnected = true;
+            return true;
+        }
+        return false;
     }
 
     public int getNumberOfMessageInMaildrop() {
         return this.nbMessages;
     }
 
-    public Message getMessage(int id){
-        for(Message mail : this.mails){
-            if(mail.getId() == id){
-                return mail;
+    public Message getMessage(int id) {
+        if (isConnected){
+            for (Message mail : this.mails) {
+                if (mail.getId() == id) {
+                    return mail;
+                }
             }
         }
         return null;
@@ -94,22 +101,28 @@ public class User {
      * -2: message not found
      */
     public int getMessageLength(int i) {
-        Message mail = getMessage(i);
-        if(mail == null)
-            return -2;
-        if(mail.isToDelete())
-            return -1;
-        return mail.getSize();
+        if(isConnected) {
+            Message mail = getMessage(i);
+            if (mail == null)
+                return -2;
+            if (mail.isToDelete())
+                return -1;
+            return mail.getSize();
+        }
+        return 0;
     }
     
     public String getMessageText(int i){
-        Message mail = getMessage(i);
-                if(mail == null)
-            return "-2";// : mail not found !
-        if(mail.isToDelete())
-            return "-1";// : mail will be destroyed !
-        mail.isNewMessage = false;
-        return mail.getText();
+        if(isConnected) {
+            Message mail = getMessage(i);
+            if (mail == null)
+                return "-2";// : mail not found !
+            if (mail.isToDelete())
+                return "-1";// : mail will be destroyed !
+            mail.isNewMessage = false;
+            return mail.getText();
+        }
+        return "";
     }
 
     /**
@@ -120,18 +133,21 @@ public class User {
      * -2 if message not found
      */
     public int setMarkDeleted(int i) {
-        Message mail = getMessage(i);
-        if(mail == null)
-            return -2;
-        if(mail.isToDelete())
-            return -1;
-        return mail.setToDelete();
+        if(isConnected) {
+            Message mail = getMessage(i);
+            if (mail == null)
+                return -2;
+            if (mail.isToDelete())
+                return -1;
+            return mail.setToDelete();
+        }
+        return 0;
     }
     
     public void unmarkAllMessages(){
-        for(Message mail : this.mails){
-            mail.setNotToDelete();
-        }
+        if(isConnected)
+            for(Message mail : this.mails)
+                mail.setNotToDelete();
     }
     
     public int disconnect(){
@@ -150,6 +166,7 @@ public class User {
                 }
             }
             buff.close();
+            isConnected = false;
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage());
         } catch (IOException ex) {
