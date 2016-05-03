@@ -29,25 +29,34 @@ public class User {
         //TO DO handle mails arraylist
         FileInputStream fis;
         try{
-            fis = new FileInputStream(new File("mails/user_"+ id + ".txt"));
-            InputStreamReader lecteur = new InputStreamReader(fis);
-            BufferedReader buff = new BufferedReader(lecteur);
-            String ligne;
-            String ligneMail;
-            String message;
-            while((ligne=buff.readLine())!=null){
-                message = "";
-                String[] messageId = ligne.split(" ");
-                do{
-                    ligneMail=buff.readLine();
-                    message += ligneMail + "\r\n";
-                }while(ligneMail.compareTo(".") != 0);
-                System.out.println(messageId[0]+ "/" + messageId[1]);
-                mails.add(
-                        new Message(Integer.parseInt(messageId[0]), 
-                                Boolean.getBoolean(messageId[1]), 
-                                message));
-                buff.readLine();
+            File repertoire = new File("mails/"+name);
+            File[] listFileMail = repertoire.listFiles();
+            if(listFileMail != null) {
+                int x = 0;
+                for (File f : listFileMail) {
+                    if (f.isFile()) {
+                        fis = new FileInputStream(f);
+                        InputStreamReader lecteur = new InputStreamReader(fis);
+                        BufferedReader buff = new BufferedReader(lecteur);
+
+                        String ligne;
+                        String ligneMail;
+                        String message = "";
+                        if((ligne=buff.readLine())!=null) {
+                            do {
+                                ligneMail = buff.readLine();
+                                message += ligneMail + "\r\n";
+                            } while (ligneMail.compareTo(".") != 0);
+                            mails.add(
+                                    new Message(x,
+                                            Boolean.getBoolean(ligne),
+                                            message,
+                                            f.getName()));
+                            x++;
+                        }
+                        fis.close();
+                    }
+                }
             }
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage());
