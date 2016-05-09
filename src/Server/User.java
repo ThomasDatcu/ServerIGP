@@ -1,15 +1,7 @@
  package Server;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.*;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -177,8 +169,7 @@ public class User {
                 fileTemp = new File(mail.fileName);
                 fileTemp.delete();
                 if(!mail.toBeDeleted) {
-                    fos = new FileOutputStream(fileTemp);
-                    OutputStreamWriter writer = new OutputStreamWriter(fos);
+                    FileWriter writer = new FileWriter(fileTemp);
                     BufferedWriter buff = new BufferedWriter(writer);
                     buff.write(mail.isNewMessage + "\n");
                     buff.write(mail.text);
