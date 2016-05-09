@@ -1,4 +1,4 @@
-0 tata toto
-1 tata yoyo
-2 tata momo
-3 zomy marc
+0 tata@server.net toto
+1 toto@server.net toto
+2 titi@server.net toto
+3 tutu@server.net toto

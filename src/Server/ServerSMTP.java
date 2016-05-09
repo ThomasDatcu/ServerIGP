@@ -6,8 +6,8 @@ import java.net.Socket;
  * Created by thomas on 11/04/16.
  */
 public class ServerSMTP extends Server {
-    public ServerSMTP(int port) {
-        super(port);
+    public ServerSMTP() {
+        super(2049);
     }
 
     @Override

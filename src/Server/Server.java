@@ -3,6 +3,7 @@ package Server;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -18,7 +19,21 @@ public abstract class Server extends Thread {
 	SSLServerSocket sslServerSocket;
 	protected int port;
 
+
+	ServerSocket socket;
+
 	public Server(int port){
+		try {
+			this.socket = new ServerSocket(port);
+			System.out.println("Server Starting");
+
+		} catch (IOException e) {
+			System.out.println("Erreur impossible d'ouvrir le socket sur le port 2048");
+			e.printStackTrace();
+		}
+	}
+
+	/*public Server(int port){
 		try {
 			this.port = port;
 			// Initialisation du SSLServerSocket sur le port 110
@@ -42,7 +57,7 @@ public abstract class Server extends Thread {
 			e1.printStackTrace();
 		}
 			System.out.println("Server Starting");
-	}
+	}*/
 
 
 	/**
@@ -57,7 +72,7 @@ public abstract class Server extends Thread {
                 Socket s = null;
                 try {
                     System.out.println("Server awaiting connection");
-                    s = this.sslServerSocket.accept();
+                    s = this.socket.accept();
 					this.initCommunication(s);
                 } catch (IOException e) {
                     e.printStackTrace();

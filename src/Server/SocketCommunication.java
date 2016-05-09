@@ -76,7 +76,9 @@ public abstract class SocketCommunication extends Thread {
 
     protected int flush(){
         try {
+            System.out.println("before flush");
             outputToClient.flush();
+            System.out.println("after flush");
             return 0;
         } catch (IOException e) {
             e.printStackTrace();

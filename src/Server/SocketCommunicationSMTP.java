@@ -28,7 +28,6 @@ public class SocketCommunicationSMTP extends SocketCommunication {
         ArrayList<User> userArrayList = new ArrayList<>();
         String message = "";
         while(!exit){
-
             textFromClient = this.receiveData();
             if(state != 3){
                 splitTextFromClient = textFromClient.split(" ");
@@ -38,6 +37,7 @@ public class SocketCommunicationSMTP extends SocketCommunication {
             switch (this.state){
 
                 case 0 :
+                    System.out.println("Server is in state 0");
                     switch(splitTextFromClient[0]){
                         case "EHLO":
                             this.writeBytes("250 Server SMTP greets" + splitTextFromClient[1] + ". Our server doesn't have any ESMTP functionality implemented yet");
@@ -57,17 +57,18 @@ public class SocketCommunicationSMTP extends SocketCommunication {
                     }
                     break;
                 case 1 :
+                    System.out.println("Server is in state 1");
                     if(splitTextFromClient[0].equals("MAIL") && splitTextFromClient[1].equals("FROM")){
                         clientUserName = splitTextFromClient[2];
-                        if(this.allUsers.checkUser(clientUserName)!=null){
+                       // if(this.allUsers.checkUser(clientUserName)!=null){
                             this.writeBytes("250 OK");
                             this.flush();
                             this.state = 2;
-                        }else{
+                        /*}else{
                             this.writeBytes("501 unknow username shutting down the communication");
                             this.flush();
                             this.close();
-                        }
+                        }*/
                     }else{
                         this.writeBytes("500 command unrecognized shutting down the communication");
                         this.flush();
@@ -75,6 +76,7 @@ public class SocketCommunicationSMTP extends SocketCommunication {
                     }
 
                 case 2 :
+                    System.out.println("Server is in state 2");
                     switch(splitTextFromClient[0]){
                         case "RCPT":
                             if(splitTextFromClient[1].equals("TO")){
@@ -109,6 +111,7 @@ public class SocketCommunicationSMTP extends SocketCommunication {
                     }
                     break;
                 case 3 :
+                    System.out.println("Server is in state 3");
                     message.concat(textFromClient);
                     if(textFromClient.equals("\r\n.\r\n")){
                         allUsers.sendMessage(message,userArrayList);
@@ -116,6 +119,7 @@ public class SocketCommunicationSMTP extends SocketCommunication {
                     }
                     break;
                 case 4 :
+                    System.out.println("Server is in state 4");
                     exit = true;
                     this.close();
                     break;
