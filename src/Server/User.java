@@ -87,6 +87,7 @@ public class User {
         if (isConnected){
             for (Message mail : this.mails) {
                 if (mail.getId() == id) {
+                    mail.read();
                     return mail;
                 }
             }
@@ -160,26 +161,37 @@ public class User {
     }
     
     public int disconnect(){
-        FileOutputStream fos;
-        int id_message=1;
+
+        if(saveUser()==0){
+            isConnected = false;
+            return 0;
+        }
+        return -1;
+    }
+
+    public int saveUser(){
         try{
-            fos = new FileOutputStream(new File("mails/user_"+ this.id +".txt"));
-            OutputStreamWriter writer = new OutputStreamWriter(fos);
-            BufferedWriter buff = new BufferedWriter(writer);
+            FileOutputStream fos;
+            File fileTemp;
             for(Message mail : this.mails){
-                if(!mail.toBeDeleted){
-                    buff.write(id_message + " " + mail.isNewMessage + "\n");
+                fileTemp = new File(mail.fileName);
+                fileTemp.delete();
+                if(!mail.toBeDeleted) {
+                    fos = new FileOutputStream(fileTemp);
+                    OutputStreamWriter writer = new OutputStreamWriter(fos);
+                    BufferedWriter buff = new BufferedWriter(writer);
+                    buff.write(mail.isNewMessage + "\n");
                     buff.write(mail.text);
                     buff.write("\r\n");
-                    id_message++;
+                    buff.close();
                 }
             }
-            buff.close();
-            isConnected = false;
         }catch(FileNotFoundException e){
             System.out.println(e.getMessage());
+            return -1;
         } catch (IOException ex) {
             Logger.getLogger(UserList.class.getName()).log(Level.SEVERE, null, ex);
+            return -2;
         }
         return 0;
     }

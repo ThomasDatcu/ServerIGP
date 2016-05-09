@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,8 +61,9 @@ public class UserList {
     public int sendMessage(String messageText, ArrayList<User> users){
         int i = 0;
         for(User u : users){
-            Message m = new Message(u.getNumberOfMessageInMaildrop(), true, messageText);
+            Message m = new Message(u.getNumberOfMessageInMaildrop(), true, messageText, u.getName() + "/" + new Date().toString());
             u.addMessage(m);
+            u.saveUser();
             i++;
         }
         return i;
