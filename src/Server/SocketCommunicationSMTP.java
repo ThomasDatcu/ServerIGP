@@ -23,13 +23,16 @@ public class SocketCommunicationSMTP extends SocketCommunication {
         this.flush();
         boolean exit = false;
         String textFromClient;
-        String[] splitTextFromClient;
+        String[] splitTextFromClient = null;
         String clientUserName;
         ArrayList<User> userArrayList = new ArrayList<>();
+        String message = "";
         while(!exit){
 
             textFromClient = this.receiveData();
-            splitTextFromClient = textFromClient.split(" ");
+            if(state != 3){
+                splitTextFromClient = textFromClient.split(" ");
+            }
             System.out.println("Data received from client, processing Data");
 
             switch (this.state){
@@ -47,6 +50,9 @@ public class SocketCommunicationSMTP extends SocketCommunication {
                             this.state = 1;
                             break;
                         default:
+                            this.writeBytes("500 command unrecognized shutting down the communication");
+                            this.flush();
+                            this.close();
                             break;
                     }
                     break;
@@ -58,10 +64,14 @@ public class SocketCommunicationSMTP extends SocketCommunication {
                             this.flush();
                             this.state = 2;
                         }else{
-                            this.writeBytes("501 unknow username");
+                            this.writeBytes("501 unknow username shutting down the communication");
                             this.flush();
-                            this.state = 2;
+                            this.close();
                         }
+                    }else{
+                        this.writeBytes("500 command unrecognized shutting down the communication");
+                        this.flush();
+                        this.close();
                     }
 
                 case 2 :
@@ -77,19 +87,33 @@ public class SocketCommunicationSMTP extends SocketCommunication {
                                     this.writeBytes("550 no such user here");
                                     this.flush();
                                 }
+                            }else{
+                                this.writeBytes("500 command unrecognized shutting down the communication");
+                                this.flush();
+                                this.close();
                             }
                             break;
                         case "DATA":
-                            this.writeBytes("354 Waiting for e-mail");
-                            this.flush();
-                            this.state = 3;
+                            if(userArrayList.isEmpty()){
+                                this.writeBytes("554 transaction failed");
+                                this.flush();
+                                this.close();
+                            }else{
+                                this.writeBytes("354 Waiting for e-mail");
+                                this.flush();
+                                this.state = 3;
+                           }
                             break;
                         default:
                             break;
                     }
                     break;
                 case 3 :
-
+                    message.concat(textFromClient);
+                    if(textFromClient.equals("\r\n.\r\n")){
+                        allUsers.sendMessage(message,userArrayList);
+                        this.state = 4;
+                    }
                     break;
                 case 4 :
                     exit = true;

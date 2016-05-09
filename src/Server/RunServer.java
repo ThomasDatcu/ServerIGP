@@ -7,8 +7,11 @@ import java.io.IOException;
  */
 public class RunServer {
     public static void main(String[] args) throws IOException {
-        ServerPop3 s1 = new ServerPop3();
-        s1.run();
+        String test = "Je test la séparation de string";
+        String[] tab = test.split(" ");
+        System.out.println(test);
+ //       ServerPop3 s1 = new ServerPop3();
+ //       s1.run();
 //        ServerSMTP s2 = new ServerSMTP();
 //        s2.run();;
     }
