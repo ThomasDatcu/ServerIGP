@@ -13,27 +13,14 @@ import java.util.ArrayList;
  * Les clients vont d'abord se connecter à ce SSLSocket ( à condition qu'il posséde les bons ciphers.
  * Ensuite, un socketCommunication va être créer et via ce socket que se dérouleront les transactions.
  * Ainsi on s'assure que plusieurs client peuvent se connecter en même temps au serveur
+ * Cette classe est commune au serveur SMTP et POP3 le constructeur est commun et utilise la technologie SSL.
   */
 public abstract class Server extends Thread {
 	SSLServerSocketFactory socketFactory;
 	SSLServerSocket sslServerSocket;
 	protected int port;
 
-
-	ServerSocket socket;
-
 	public Server(int port){
-		try {
-			this.socket = new ServerSocket(port);
-			System.out.println("Server Starting");
-
-		} catch (IOException e) {
-			System.out.println("Erreur impossible d'ouvrir le socket sur le port 2048");
-			e.printStackTrace();
-		}
-	}
-
-	/*public Server(int port){
 		try {
 			this.port = port;
 			// Initialisation du SSLServerSocket sur le port 110
@@ -57,7 +44,7 @@ public abstract class Server extends Thread {
 			e1.printStackTrace();
 		}
 			System.out.println("Server Starting");
-	}*/
+	}
 
 
 	/**
@@ -72,7 +59,7 @@ public abstract class Server extends Thread {
                 Socket s = null;
                 try {
                     System.out.println("Server awaiting connection");
-                    s = this.socket.accept();
+                    s = this.sslServerSocket.accept();
 					this.initCommunication(s);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -83,8 +70,7 @@ public abstract class Server extends Thread {
 
 
 	/**
-	 * On instancie un nouveau socketCommuncation qui correspond à un nouveau thread.
-	 * Ensuite, on lance l'éxécution de notre thread	 *
+	 * Cette méthode est spécifique à chaque type de serveur, elle n'est donc pas défini dans la classe mère.
      */
 	protected abstract void initCommunication(Socket s);
 

@@ -21,7 +21,7 @@ public class User {
         //TO DO handle mails arraylist
         FileInputStream fis;
         try{
-            File repertoire = new File("mails/"+name);
+            File repertoire = new File("ressources/mails/"+name);
             File[] listFileMail = repertoire.listFiles();
             if(listFileMail != null) {
                 int x = 0;
@@ -169,7 +169,7 @@ public class User {
                 fileTemp = new File(mail.fileName);
                 fileTemp.delete();
                 if(!mail.toBeDeleted) {
-                    FileWriter writer = new FileWriter(fileTemp);
+                    FileWriter writer = new FileWriter(fileTemp,true);
                     BufferedWriter buff = new BufferedWriter(writer);
                     buff.write(mail.isNewMessage + "\n");
                     buff.write(mail.text);

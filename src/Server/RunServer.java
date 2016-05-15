@@ -7,10 +7,12 @@ import java.io.IOException;
  */
 public class RunServer {
     public static void main(String[] args) throws IOException {
- //       ServerPop3 s1 = new ServerPop3();
- //       s1.run();
+        //Starting the POP3 Server
+        ServerPop3 s1 = new ServerPop3();
+        s1.start();
+        // Starting the SMTP Server
         ServerSMTP s2 = new ServerSMTP();
-        s2.run();;
+        s2.start();;
     }
 
 }

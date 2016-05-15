@@ -61,7 +61,8 @@ public class UserList {
     public int sendMessage(String messageText, ArrayList<User> users){
         int i = 0;
         for(User u : users){
-            Message m = new Message(u.getNumberOfMessageInMaildrop(), true, messageText, u.getName() + "/" + new Date().toString());
+            System.out.println("creation du message : " + messageText +" " + u.getName() + "/" + new Date().toString());
+            Message m = new Message(u.getNumberOfMessageInMaildrop(), true, messageText, "resources/mails/" + u.getName() + "/" + new Date().toString());
             u.addMessage(m);
             u.saveUser();
             i++;
